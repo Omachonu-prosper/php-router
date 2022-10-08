@@ -16,6 +16,12 @@ class Router {
 
 	}
 
+	private function notFound() {
+
+		header('HTTP/1.1 404 Not Found');
+
+	}
+
 	public function get($path, $view) {
 
 		$this->addToPath('GET', $path, $view);
@@ -29,11 +35,20 @@ class Router {
 			// Router logic
 			if($_SERVER['REQUEST_URI'] == $path['path']) {
 
-				require $path['view'];
+				// HTTP GET requests
+				if($_SERVER['REQUEST_METHOD'] == 'GET' AND $path['method'] == 'GET') {
+
+					require $path['view'];
+
+				} else {
+
+					$this->notFound();
+
+				}
 
 			} else {
 
-				header('HTTP/1.1 404 Not Found');
+				$this->notFound();
 
 			}
 
